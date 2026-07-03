@@ -2,7 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import tensorcircuit as tc
 
-K = tc.set_backend("jax")
+K = tc.set_backend("jax") #使用jax后端
 
 
 @K.jit
