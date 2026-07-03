@@ -1,0 +1,42 @@
+% !TEX program = xelatex
+\documentclass[11pt, a4paper]{ctexart}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{left=2.2cm, right=2.2cm, top=2.2cm, bottom=2.2cm}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+
+\usepackage{tikz}
+\usetikzlibrary{3d}
+\usepackage{tikz-3dplot}
+\usepackage{graphicx}
+
+\title{}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{proof}
+若
+\[
+\hat{P}^2=I
+\]
+\[
+\Rightarrow \hat{P}^{2n}=I ,\quad \hat{P}^{2n+1}=\hat{P}
+\]
+\begin{align*}
+e^{i\theta \hat{P}}&=\sum_{n=0}^{\infty}\frac{(i\theta \hat{P})^n}{n!}=\sum_{n=0}^{\infty}\frac{(i\theta)^{2n}}{(2n)!}\hat{P}^{2n}+\sum_{n=0}^{\infty}\frac{(i\theta)^{2n+1}}{(2n+1)!}\hat{P}^{2n+1}\\
+&=\sum_{n=0}^{\infty}\frac{(i\theta)^{2n}}{(2n)!}I+\sum_{n=0}^{\infty}\frac{(i\theta)^{2n+1}}{(2n+1)!}\hat{P}\\
+&=\cos \theta I+i\sin \theta \hat{P}
+\end{align*}
+而$\hat P$取：
+\begin{equation*}
+\sigma_x = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad
+\sigma_y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad
+\sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}
+\end{equation*}
+均满足$\hat{P}^2=I$
+\end{proof}
+\end{document}
