@@ -38,13 +38,13 @@ R(\theta)\ket{0}=\cos\theta\,\ket{0}-\sin\theta\,\ket{1}.
 
 \section{2-2 矩阵指数}
 
-三个泡利矩阵的外积（Dirac）形式为
+三个泡利矩阵的Dirac形式为
 \begin{align}
 \sigma_x &= \ket{0}\bra{1}+\ket{1}\bra{0},\\
 \sigma_y &= -i\,\ket{0}\bra{1}+i\,\ket{1}\bra{0},\\
 \sigma_z &= \ket{0}\bra{0}-\ket{1}\bra{1}.
 \end{align}
-由 $\hat P^2=I$（见 2-2 证明），矩阵欧拉公式
+由 $\hat P^2=I$（见 2-2 proof），有：
 \begin{equation}
 e^{i\theta\hat P}=\cos\theta\,I+i\sin\theta\,\hat P,
 \qquad
@@ -66,11 +66,6 @@ $\bigl(e^{i\theta\hat P/2}\bigr)^\dagger=e^{-i\theta\hat P/2}$，期望为
 
 \section{2-4 张量积}
 
-$n$ 比特计算基是单比特基的张量积：
-\begin{equation}
-\ket{q_0 q_1\cdots q_{n-1}}
-=\ket{q_0}\tg\ket{q_1}\tg\cdots\tg\ket{q_{n-1}}.
-\end{equation}
 单点与双点算符（下标为位置，从左数 0 起点）：
 \begin{align}
 Z_i &= I^{\tg i}\tg\sigma_z\tg I^{\tg(n-i-1)},\\
@@ -82,7 +77,6 @@ H=\sum_{i=0}^{n-1} Z_i+\sum_{i=0}^{n-2} X_iX_{i+1},
 \qquad
 \mel{00\cdots0}{H}{00\cdots0}=n.
 \end{equation}
-（因 $\bra{0}\sigma_z\ket{0}=1$ 贡献 $n$，$\bra{0}\sigma_x\ket{0}=0$ 贡献 $0$。）
 
 \section{目标列向量}
 
