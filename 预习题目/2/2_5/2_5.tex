@@ -1,0 +1,96 @@
+% !TEX program = xelatex
+\documentclass[11pt, a4paper]{ctexart}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{left=2.2cm, right=2.2cm, top=2.2cm, bottom=2.2cm}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+
+% ---- Dirac 符号简写 ----
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\bra}[1]{\langle#1|}
+\newcommand{\braket}[2]{\langle#1|#2\rangle}
+\newcommand{\mel}[3]{\langle#1|#2|#3\rangle}
+\newcommand{\tg}{\otimes}
+
+\title{2-5 狄拉克符号}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{2-1 旋转矩阵}
+
+$R(\theta)$ 在基 $\{\ket{0},\ket{1}\}$ 下的矩阵元为
+$R_{ij}=\bra{i}R\ket{j}$，按外积展开：
+\begin{align*}
+R(\theta)
+&=\cos\theta\bigl(\ket{0}\bra{0}+\ket{1}\bra{1}\bigr)
+  +\sin\theta\bigl(\ket{0}\bra{1}-\ket{1}\bra{0}\bigr) \\
+&=\cos\theta\,I+\sin\theta\bigl(\ket{0}\bra{1}-\ket{1}\bra{0}\bigr).
+\end{align*}
+作用在初态 $\ket{0}$ 上：
+\begin{equation}
+R(\theta)\ket{0}=\cos\theta\,\ket{0}-\sin\theta\,\ket{1}.
+\end{equation}
+
+\section{2-2 矩阵指数}
+
+三个泡利矩阵的外积（Dirac）形式为
+\begin{align}
+\sigma_x &= \ket{0}\bra{1}+\ket{1}\bra{0},\\
+\sigma_y &= -i\,\ket{0}\bra{1}+i\,\ket{1}\bra{0},\\
+\sigma_z &= \ket{0}\bra{0}-\ket{1}\bra{1}.
+\end{align}
+由 $\hat P^2=I$（见 2-2 证明），矩阵欧拉公式
+\begin{equation}
+e^{i\theta\hat P}=\cos\theta\,I+i\sin\theta\,\hat P,
+\qquad
+I=\ket{0}\bra{0}+\ket{1}\bra{1}.
+\end{equation}
+
+\section{2-3 期望}
+
+矩阵 $\hat Q$ 关于列向量 $v$ 的期望，即 bra-ket 形式
+\begin{equation}
+v^\dagger \hat Q\,v=\mel{v}{\hat Q}{v}.
+\end{equation}
+取 $v(\theta)=e^{i\theta\hat P/2}\ket{0}$，注意到 $\hat P$ 厄米，故
+$\bigl(e^{i\theta\hat P/2}\bigr)^\dagger=e^{-i\theta\hat P/2}$，期望为
+\begin{equation}
+\langle\hat Q\rangle
+=\bra{0}\,e^{-i\theta\hat P/2}\,\hat Q\,e^{i\theta\hat P/2}\,\ket{0}.
+\end{equation}
+
+\section{2-4 张量积}
+
+$n$ 比特计算基是单比特基的张量积：
+\begin{equation}
+\ket{q_0 q_1\cdots q_{n-1}}
+=\ket{q_0}\tg\ket{q_1}\tg\cdots\tg\ket{q_{n-1}}.
+\end{equation}
+单点与双点算符（下标为位置，从左数 0 起点）：
+\begin{align}
+Z_i &= I^{\tg i}\tg\sigma_z\tg I^{\tg(n-i-1)},\\
+X_i X_{i+1} &= I^{\tg i}\tg\sigma_x\tg\sigma_x\tg I^{\tg(n-i-2)}.
+\end{align}
+哈密顿量及其在 $\ket{0}^{\tg n}=\ket{00\cdots0}$ 下的期望：
+\begin{equation}
+H=\sum_{i=0}^{n-1} Z_i+\sum_{i=0}^{n-2} X_iX_{i+1},
+\qquad
+\mel{00\cdots0}{H}{00\cdots0}=n.
+\end{equation}
+（因 $\bra{0}\sigma_z\ket{0}=1$ 贡献 $n$，$\bra{0}\sigma_x\ket{0}=0$ 贡献 $0$。）
+
+\section{目标列向量}
+
+\begin{align}
+\frac{1}{\sqrt{2}}\bigl(\ket{010}-\ket{101}\bigr)
+&=\frac{1}{\sqrt{2}}\bigl(\ket{0}\tg\ket{1}\tg\ket{0}-\ket{1}\tg\ket{0}\tg\ket{1}\bigr)\\
+&=\frac{1}{\sqrt{2}}
+\begin{pmatrix}0\\0\\1\\0\\0\\-1\\0\\0\end{pmatrix}
+\end{align}
+
+\end{document}
