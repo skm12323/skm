@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.linalg import expm
 import matplotlib.pyplot as plt
+import os
 
 def expectation(axis_1, axis_2, theta):
     pauli_matrices = {
@@ -42,7 +43,10 @@ if __name__ == "__main__":
     plt.legend(ncol=3, fontsize="small")
     plt.grid(True)
     plt.tight_layout()
-    out_path = "pauli_expectations.png"
+    out_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "pauli_expectations.png",
+    )
     plt.savefig(out_path, dpi=200)
     print(f"Saved plot to {out_path}")
     plt.show()
