@@ -37,21 +37,21 @@ if __name__ == "__main__":
     Y_std = np.array([[0, -1j], [1j, 0]], dtype=complex)
     Z_std = np.array([[1, 0], [0, -1]], dtype=complex)
     print("I = |0><0| + |1><1| =\n", I)
-    print("X = |0><1| + |1><0|   与标准一致:", np.allclose(X, X_std))
-    print("Y = -i|0><1| + i|1><0| 与标准一致:", np.allclose(Y, Y_std))
-    print("Z = |0><0| - |1><1|   与标准一致:", np.allclose(Z, Z_std))
+    print("X = |0><1| + |1><0|     ", np.allclose(X, X_std))
+    print("Y = -i|0><1| + i|1><0|  ", np.allclose(Y, Y_std))
+    print("Z = |0><0| - |1><1|     ", np.allclose(Z, Z_std))
 
-    print("\n=== 期望即 <v|Q|v>（对应 2-3）===")
+    print("\n=== 期望（2-3）===")
     theta = np.pi / 3
     v = expm(1j * theta * X / 2) @ ket0       # v(θ) = e^{iθP/2}|0>
     expect = (v.conj().T @ Z @ v)[0, 0]       # <v|Z|v>
     print(f"<0|e^{{-iθX/2}} Z e^{{iθX/2}}|0> (θ=π/3) = {expect.real:.6f}")
 
-    print("\n=== 多比特基矢 |q0 q1 q2>（左为高位，下标=二进制值）===")
+    print("\n=== 多比特基矢 |q0 q1 q2> ===")
     for bits in ["000", "010", "101", "111"]:
         k = kron_all(*[ket0 if b == "0" else ket1 for b in bits])
         idx = int(bits, 2)
-        print(f"|{bits}> -> index {idx}  (核对非零位: {int(np.argmax(k))})")
+        print(f"|{bits}> -> index {idx}")
 
     print("\n=== (|010> - |101>)/√2 的列向量 ===")
     ket010 = kron_all(ket0, ket1, ket0)
