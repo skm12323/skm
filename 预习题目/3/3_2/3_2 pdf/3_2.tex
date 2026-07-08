@@ -1,0 +1,35 @@
+% !TEX program = xelatex
+\documentclass[11pt, a4paper]{ctexart}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{left=2.2cm, right=2.2cm, top=2.2cm, bottom=2.2cm}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+
+\title{3-2 三角函数数值微分}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\[
+f(x)=A\sin(x+B)+C
+\]
+\[
+f'(x)=A\cos(x+B)
+\]
+\[
+\frac{f(x+\delta)-f(x-\delta)}{\tau} = A\cdot\frac{\sin(x+\delta+B)-\sin(x-\delta+B)}{\tau}= \frac{2A}{\tau}\cdot \sin(\delta) \cos(x+B)
+\]
+若:
+\[
+f'(x)=\frac{f(x+\delta)-f(x-\delta)}{\tau}
+\]
+则有:
+\[
+\tau = 2\sin(\delta)
+\]
+\end{document}
