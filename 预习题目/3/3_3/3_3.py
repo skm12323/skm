@@ -27,7 +27,7 @@ def compute_grad_by_paramete_shift(f, theta, P_1, P_2):
     f_minus = f(theta - np.pi / 2, P_1, P_2)
     grad = (f_plus - f_minus) / 2
     return grad
-
+'''
 if __name__ == "__main__":
     theta = 0.57
     P_1 = sigma_x
@@ -39,9 +39,24 @@ if __name__ == "__main__":
     print("Numerical gradient:", grad_numerical)
     print("Parameter-shift gradient:", grad_parameter_shift)
     print("Difference:", np.abs(grad_numerical - grad_parameter_shift))
-
+'''
 '''
 能使用参数平移, 原因: 
 
     f展开后的所有项均为sin(θ/2)cos(θ/2), sin(θ/2)^2, cos(θ/2)^2形式, 因此一定能够转化为f(x) = A sin(x + B) + C的形式 ( 因为e^(i θ/2 P)的展开形式 )
 '''
+if __name__ == "__main__":
+    theta = float(input("请输入theta的值: "))
+    for a in ['x', 'y', 'z']:
+        for b in ['x', 'y', 'z']:
+            P_1 = {'x': sigma_x, 'y': sigma_y, 'z': sigma_z}[a]
+            P_2 = {'x': sigma_x, 'y': sigma_y, 'z': sigma_z}[b]
+
+            grad_numerical = compute_grad_numerical(f, theta, P_1, P_2)
+            grad_parameter_shift = compute_grad_by_paramete_shift(f, theta, P_1, P_2)
+
+            print(f"对σ_{a}和σ_{b}分别计算:")
+            print("数值微分: ", grad_numerical)
+            print("参数平移: ", grad_parameter_shift)
+            print("Difference: ", np.abs(grad_numerical - grad_parameter_shift))
+            print()
