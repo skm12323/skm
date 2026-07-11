@@ -1,71 +1,60 @@
-# import os
-# 可选：指定使用的 GPU（若有多个）
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
+import os
 import numpy as np
 import tensorcircuit as tc
 import matplotlib.pyplot as plt
 
-# ===================== 1. 设置后端和随机种子 =====================
-tc.set_backend("jax")          # 使用 JAX 后端 (需已安装 jax[cuda] 或 jax[cpu])
-#tc.set_random_seed(42)         # 固定随机种子，保证可复现
+# 2 比特问题用 numpy 后端即可：无需 GPU，也避开 jax 在小算子上的派发开销。
+tc.set_backend("numpy")
 
-# ===================== 2. 构建 Bell 态电路 =====================
+# 用 |+0⟩=(|00⟩+|10⟩)/√2（不加 cx）：P(偶)=P(奇)=0.5，估计量标准差 = 1/√N。
+# Bell 态（加 cx）下 P(奇)=0、方差为 0，看不到抽样噪声。
 c = tc.Circuit(2)
 c.h(0)
-c.cx(0, 1)
-exact = c.expectation_ps(z=[0, 1])  # 精确值应为 1.0
-print(f"精确期望值: {exact:.6f}")
+# c.cx(0, 1)   # 加上是 Bell 态
 
-# ===================== 3. 定义采样估计函数 =====================
+probs = np.abs(np.array(c.state()).flatten()) ** 2          # 末态 4 个概率 |amp|^2
+exact = float(np.real(c.expectation_ps(z=[0, 1])))          # 精确 <Z0Z1>
+print(f"probs = {np.round(probs, 4)},  精确 <Z0Z1> = {exact}")
+
+rng = np.random.default_rng(0)
+
 def compute(N):
-    """
-    通过 N 次采样估计 <Z0 Z1>
-    """
-    # sample 返回形状为 (N,) 的整数数组，0~3 对应 |00>,|01>,|10>,|11>
-    samples = c.sample(batch=N, format="sample_int")
-    # 将样本映射为 ±1：|00> 或 |11> 对应 +1，其他对应 -1
-    signs = np.where((samples == 0) | (samples == 3), 1, -1)
-    return np.mean(signs)  # 直接返回均值
-
+    # 从精确分布抽 N 个 iid 样本，统计上等价于 c.sample，但纯用CPU无派发开销。
+    s = rng.choice(4, size=N, p=probs)
+    return float(np.mean(np.where((s == 0) | (s == 3), 1, -1)))
 def diff(N):
-    """估计误差"""
     return compute(N) - exact
 
-# ===================== 4. 生成样本数序列 =====================
-Ns = np.logspace(1, 5, 30, dtype=int)  # 从 10 到 100,000，共 30 个点
+Ns = np.logspace(1, 5, 30, dtype=int)
+repeats = 20
 
-# ===================== 5. 重复实验，计算误差统计 =====================
-repeats = 50                    # 每个 N 重复采样的次数
-diffs_mean = []
-diffs_std = []
+# 用 RMS 误差
+rms_err = [
+    np.sqrt(np.mean(np.square([diff(N) for _ in range(repeats)]))) for N in Ns
+]
 
-for N in Ns:
-    errs = [diff(N) for _ in range(repeats)]
-    diffs_mean.append(np.mean(errs))
-    diffs_std.append(np.std(errs))
-
-# ===================== 6. 绘图 =====================
 plt.figure(figsize=(8, 5))
-plt.semilogx(Ns, diffs_mean, 'o-', color='b', label='Mean error')
-plt.fill_between(
-    Ns,
-    np.array(diffs_mean) - np.array(diffs_std),
-    np.array(diffs_mean) + np.array(diffs_std),
-    alpha=0.2, color='b', label='±1 std'
-)
+plt.semilogx(Ns, rms_err, "o-", color="b", label=f"RMS error ({repeats} repeats)")
+plt.semilogx(Ns, 1.0 / np.sqrt(Ns), "--", color="r", label=r"$1/\sqrt{N}$")
 
-# 理论参考线：~1/√N (缩放系数仅为视觉对比)
-theory = 0.5 / np.sqrt(Ns)
-plt.semilogx(Ns, theory, '--', color='r', label=r'~$1/\sqrt{N}$ (scaled)')
-
-plt.xlabel('Sample size $N$ (log scale)')
-plt.ylabel('Estimation error')
-plt.title('Sampling error of $\langle Z_0 Z_1 \\rangle$ for Bell state')
-plt.grid(True, which='both', linestyle='--', alpha=0.6)
+plt.xlabel("Sample size $N$ (log scale)")
+plt.ylabel(r"Estimation error of $\langle Z_0 Z_1\rangle$")
+plt.title(r"Sampling error vs $N$ for $|+0\rangle$ state")
+plt.grid(True, which="both", linestyle="--", alpha=0.6)
 plt.legend()
 plt.tight_layout()
+
+# 存到脚本同目录，且不覆盖 4_3.py 的 expectations_diff.png
+out_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "expectations_diff_better.png",
+)
+plt.savefig(out_path, dpi=200)
+print(f"Saved plot to {out_path}")
 plt.show()
 
-# 可选：打印后端信息确认 GPU 是否被使用
-# tc.about()
+# ── 通用写法（大线路才需要）──
+# 几十上百比特时拿不到完整概率分布，才用 TC 采样器
+# 一次 batch 抽完，避免 600 次小调用带来的派发开销：
+#   samples = c.sample(batch=repeats * N, format="sample_int").reshape(repeats, N)
+#   errs = np.mean(np.where((samples == 0) | (samples == 3), 1, -1), axis=1) - exact
