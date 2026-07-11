@@ -33,6 +33,6 @@ Bell 态下 `diff(N)` 在 N≳1e3 后**反而随 N 增长**，y 轴 ~1e-12。这
 
 - **小线路不用 GPU**：2 比特任务有用计算量≈0，GPU 全忙在 kernel 派发开销上（FAQ明确说明了：≤16 比特 GPU 可能反而更慢）。
 - **`CUDA_VISIBLE_DEVICES=""`**（须在 `import tensorcircuit` 前设）能让 jax 后端跑在 CPU 上，避免 GPU thrash 但 `c.sample` 本身仍慢（~1s/1e4 shot）。
-- **纯采样小线路**：直接 numpy 后端 + `rng.choice` 多项采样，绕开 `c.sample`，最快。
+- **纯采样小线路**：直接 numpy 后端 + `rng.choice` 多项采样，绕开 `c.sample`，最快。（不过我写 `4_3_better.py` 时还不知道可以换成仅 CPU ，不然我大概不会考虑尝试 `rng.choice` ）
 - **需要 autodiff 的小线路**（如 §3）：用 jax + `CUDA_VISIBLE_DEVICES=""`，既避 thrash 又保留 `K.grad`。
 - **大线路**（>16 比特）：需要 GPU + `c.sample`，且须 `batch=` 合并调用。
