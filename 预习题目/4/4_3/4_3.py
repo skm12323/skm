@@ -45,7 +45,7 @@ if __name__ == "__main__":
     plt.tight_layout()
     out_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
-        "expectations_diff.png",
+        "expectations_diff_Bell.png",
     )
     plt.savefig(out_path, dpi=200)
     print(f"Saved plot to {out_path}")

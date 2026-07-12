@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 # 2 比特问题用 numpy 后端即可：无需 GPU，也避开 jax 在小算子上的派发开销。
 tc.set_backend("numpy")
 
-# 用 |+0⟩=(|00⟩+|10⟩)/√2（不加 cx）：P(偶)=P(奇)=0.5，估计量标准差 = 1/√N。
+# 原先改为使用 |+0⟩=(|00⟩+|10⟩)/√2（不加 cx）：P(偶)=P(奇)=0.5，估计量标准差 = 1/√N。
 # Bell 态（加 cx）下 P(奇)=0、方差为 0，看不到抽样噪声。
 c = tc.Circuit(2)
 c.h(0)
+c.h(1)  # 题目修改为增加对1施加 Hadamard 门，为(|00>+|01>+|10>+|11>)/2。
 # c.cx(0, 1)   # 加上是 Bell 态
 
 probs = np.abs(np.array(c.state()).flatten()) ** 2          # 末态 4 个概率 |amp|^2
@@ -47,8 +48,8 @@ plt.tight_layout()
 # 存到脚本同目录，且不覆盖 4_3.py 的 expectations_diff.png
 out_path = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    "expectations_diff_better.png",
-)
+    "expectations_diff_h_01.png",
+)# 原仅对0施加H门的图为 expectations_diff_better.png
 plt.savefig(out_path, dpi=200)
 print(f"Saved plot to {out_path}")
 plt.show()
