@@ -29,7 +29,7 @@ def compute_grad_by_paramete_shift(f, theta, P_1, P_2):
 if __name__ == "__main__":
     
     theta_init = float(input("请输入theta的初始值: "))
-    Lambda = float(input("请输入步长lambda的值: "))
+    Lambda = float(input("请输入学习率lambda的值: "))
     n = int(input("请输入迭代次数n的值: "))
     test_if_is_const = 0.
 
